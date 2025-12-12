@@ -1,7 +1,19 @@
-import Image from "next/image";
+import { FeaturedCarousel } from "@/components/app/FeaturedCarousel";
+import { FeaturedCarouselSkeleton } from "@/components/app/FeaturedCarouselSkeleton";
+import { Suspense } from "react";
+import { getFeaturedProducts } from "@/service/productService";
 
-export default function Home() {
+export default async function Home() {
+  const featuredProducts = await getFeaturedProducts();
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black"></div>
+    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-900">
+      {/* Featured Products Carousel */}
+      {featuredProducts.length > 0 && (
+        <Suspense fallback={<FeaturedCarouselSkeleton />}>
+          <FeaturedCarousel products={featuredProducts} />
+        </Suspense>
+      )}
+    </div>
   );
 }

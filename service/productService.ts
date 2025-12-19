@@ -2,9 +2,7 @@ import { GET_FEATURED_PRODUCTS } from "@/lib/api";
 
 export async function getFeaturedProducts() {
   try {
-    const response = await fetch(GET_FEATURED_PRODUCTS, {
-      next: { revalidate: 3600 }, // ISR - revalidate every hour
-    });
+    const response = await fetch(GET_FEATURED_PRODUCTS);
 
     if (!response.ok) {
       throw new Error("Failed to fetch featured products");

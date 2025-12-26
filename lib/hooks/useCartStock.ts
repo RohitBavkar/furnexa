@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback, useMemo } from "react";
 import type { CartItem } from "@/lib/store/cart-store";
-import { getProductsStock } from "@/service/productService";
+import { getProductsStockAction } from "@/lib/actions/stock";
 
 export interface StockInfo {
   productId: string;
@@ -22,7 +22,7 @@ interface UseCartStockReturn {
 }
 
 /**
- * Fetches current stock levels for cart items
+ * Fetches current stock levels for cart items via Server Action
  * Returns stock info map and loading state
  */
 export function useCartStock(items: CartItem[]): UseCartStockReturn {
@@ -44,7 +44,8 @@ export function useCartStock(items: CartItem[]): UseCartStockReturn {
     setIsLoading(true);
 
     try {
-      const stockArray = await getProductsStock(productIds);
+      // Call Server Action instead of HTTP API
+      const stockArray = await getProductsStockAction(productIds);
 
       const newStockMap = new Map<string, StockInfo>();
 

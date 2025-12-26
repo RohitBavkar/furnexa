@@ -1,7 +1,10 @@
 import { successResponse, handleApiError } from "@/lib/response";
-import DB from "@/lib/prisma";
 import type { NextRequest } from "next/server";
+import { getFilteredProducts } from "@/service/productService";
 
+/**
+ * API Route - Thin wrapper for service layer
+ */
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
@@ -15,74 +18,15 @@ export async function GET(request: NextRequest) {
     const inStock = searchParams.get("inStock") === "true";
     const sort = searchParams.get("sort") || "name";
 
-    // Build Prisma query filters
-    const whereClause: any = {};
-
-    // Search filter
-    if (searchQuery) {
-      whereClause.name = {
-        contains: searchQuery,
-        mode: "insensitive",
-      };
-    }
-
-    // Category filter
-    if (categorySlug) {
-      whereClause.category = {
-        slug: categorySlug,
-      };
-    }
-
-    // Color filter
-    if (color) {
-      whereClause.color = color;
-    }
-
-    // Material filter
-    if (material) {
-      whereClause.material = material;
-    }
-
-    // Price range filter
-    if (minPrice > 0 || maxPrice > 0) {
-      whereClause.price = {};
-      if (minPrice > 0) whereClause.price.gte = minPrice;
-      if (maxPrice > 0) whereClause.price.lte = maxPrice;
-    }
-
-    // Stock filter
-    if (inStock) {
-      whereClause.stock = {
-        gt: 0,
-      };
-    }
-
-    // Determine sort order
-    let orderBy: any = { name: "asc" };
-    switch (sort) {
-      case "price_asc":
-        orderBy = { price: "asc" };
-        break;
-      case "price_desc":
-        orderBy = { price: "desc" };
-        break;
-      case "relevance":
-      case "name":
-      default:
-        orderBy = { name: "asc" };
-        break;
-    }
-
-    // Fetch products with filters
-    const products = await DB.product.findMany({
-      where: whereClause,
-      orderBy,
-      include: {
-        category: true,
-        images: {
-          orderBy: { order: "asc" },
-        },
-      },
+    const products = await getFilteredProducts({
+      searchQuery,
+      categorySlug,
+      color,
+      material,
+      minPrice,
+      maxPrice,
+      inStock,
+      sort,
     });
 
     return successResponse(products);

@@ -1,7 +1,10 @@
 import { NextRequest } from "next/server";
-import DB from "@/lib/prisma";
-import { errorResponse, handleApiError, successResponse } from "@/lib/response";
+import { handleApiError, successResponse } from "@/lib/response";
+import { getProductsByIds } from "@/service/productService";
 
+/**
+ * API Route - Thin wrapper for service layer
+ */
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
@@ -15,16 +18,7 @@ export async function GET(request: NextRequest) {
       return successResponse([]);
     }
 
-    const products = await DB.product.findMany({
-      where: { id: { in: ids } },
-      include: {
-        images: {
-          orderBy: { order: "asc" },
-        },
-        category: true,
-      },
-    });
-
+    const products = await getProductsByIds(ids);
     return successResponse(products);
   } catch (error) {
     return handleApiError(error, "Error fetching products");

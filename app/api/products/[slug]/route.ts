@@ -1,7 +1,10 @@
 import { NextRequest } from "next/server";
-import DB from "@/lib/prisma";
 import { errorResponse, handleApiError, successResponse } from "@/lib/response";
+import { getProductBySlug } from "@/service/productService";
 
+/**
+ * API Route - Thin wrapper for service layer
+ */
 export async function GET(
   _request: NextRequest,
   { params }: { params: Promise<{ slug: string }> }
@@ -13,15 +16,7 @@ export async function GET(
       return errorResponse("Product slug is required", 400);
     }
 
-    const product = await DB.product.findUnique({
-      where: { slug },
-      include: {
-        images: {
-          orderBy: { order: "asc" },
-        },
-        category: true,
-      },
-    });
+    const product = await getProductBySlug(slug);
 
     if (!product) {
       return errorResponse("Product not found", 404);

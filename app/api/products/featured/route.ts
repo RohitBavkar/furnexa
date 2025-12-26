@@ -1,16 +1,12 @@
 import { successResponse, handleApiError } from "@/lib/response";
-import DB from "@/lib/prisma";
+import { getFeaturedProducts } from "@/service/productService";
 
+/**
+ * API Route - Thin wrapper for service layer
+ */
 export async function GET() {
   try {
-    const products = await DB.product.findMany({
-      where: {
-        featured: true,
-      },
-      include: {
-        images: true,
-      },
-    });
+    const products = await getFeaturedProducts();
     return successResponse(products);
   } catch (error) {
     return handleApiError(error, "Error fetching products");

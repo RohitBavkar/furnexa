@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Furnexa",
+  title: "Furnisc",
   description: "Premium furniture for your home",
 };
 

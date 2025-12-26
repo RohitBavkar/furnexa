@@ -5,7 +5,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  schemas  = ["furnexa"]
+  schemas  = ["furnisc"]
 }
 
 model Product {
@@ -31,7 +31,7 @@ model Product {
   
   @@index([categoryId])
   @@index([slug])
-  @@schema("furnexa")
+  @@schema("furnisc")
 }
 
 model ProductImage {
@@ -44,7 +44,7 @@ model ProductImage {
   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   
   @@index([productId])
-  @@schema("furnexa")
+  @@schema("furnisc")
 }
 
 model Category {
@@ -59,7 +59,7 @@ model Category {
   products    Product[]
   
   @@index([slug])
-  @@schema("furnexa")
+  @@schema("furnisc")
 }
 
 model Customer {
@@ -75,7 +75,7 @@ model Customer {
   
   @@index([clerkUserId])
   @@index([email])
-  @@schema("furnexa")
+  @@schema("furnisc")
 }
 
 model Order {
@@ -95,7 +95,7 @@ model Order {
   @@index([customerId])
   @@index([orderNumber])
   @@index([stripePaymentId])
-  @@schema("furnexa")
+  @@schema("furnisc")
 }
 
 model OrderItem {
@@ -111,5 +111,5 @@ model OrderItem {
   
   @@index([orderId])
   @@index([productId])
-  @@schema("furnexa")
+  @@schema("furnisc")
 }

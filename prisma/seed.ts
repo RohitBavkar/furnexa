@@ -7,7 +7,7 @@ const pool = new Pool({
 });
 
 const adapter = new PrismaPg(pool, {
-  schema: "furnexa",
+  schema: "furnisc",
 });
 
 const prisma = new PrismaClient({

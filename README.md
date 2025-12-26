@@ -1,2 +1,3 @@
-# furnexa
+# furnisc
+
 The Furniture Store
